@@ -173,7 +173,8 @@ def build_innings_stats(cur, matches):
 def main():
     if os.path.exists(DB_PATH):
         os.remove(DB_PATH)
-    with open("schema.sql") as f:
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(project_root, "schema.sql")) as f:
         schema = f.read()
     conn = sqlite3.connect(DB_PATH)
     conn.executescript(schema)
