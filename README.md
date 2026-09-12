@@ -55,3 +55,6 @@ Tables: `teams`, `players`, `venues`, `series`, `matches`, `batting_stats`,
 
 ## Tech Stack
 Python · Streamlit · SQLite · Cricbuzz REST API · pandas · requests
+
+## Author
+**Prachi Sable**|Data Analyst|Pune
