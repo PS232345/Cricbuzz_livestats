@@ -1,7 +1,3 @@
-"""
-Generates realistic sample cricket data and loads it into the SQLite DB.
-Run this once after creating the schema: python generate_sample_data.py
-"""
 import sqlite3
 import random
 from datetime import date, timedelta
