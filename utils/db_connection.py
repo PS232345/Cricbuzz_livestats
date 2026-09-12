@@ -1,12 +1,6 @@
-"""
-Centralized database connection handling.
-Default: SQLite (DB_PATH below). Swap to Postgres/MySQL by editing get_connection()
-and installing the relevant connector (psycopg2 / mysql-connector-python) —
-the rest of the app only calls get_connection() and run_query(), so no other
-code needs to change.
-"""
 import sqlite3
 import os
+import sys
 import pandas as pd
 
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
@@ -24,14 +18,15 @@ def get_connection():
 
 def _bootstrap_db():
     """First-run only: build schema + seed sample data. Keeps Streamlit Cloud
-    deployments working even though its filesystem is ephemeral."""
-    import subprocess
+    deployments working even though its filesystem is ephemeral. Calls the
+    seeder in-process (not via subprocess) so it works reliably regardless
+    of the host's PATH/sandboxing."""
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
-    subprocess.run(
-        ["python3" if os.name != "nt" else "python", "generate_sample_data.py"],
-        cwd=project_root, check=True,
-    )
+    import generate_sample_data
+    generate_sample_data.main()
 
 
 def run_query(query: str, params: tuple = ()) -> pd.DataFrame:
